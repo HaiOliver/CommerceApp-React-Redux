@@ -6,11 +6,16 @@ import {auth} from '../../fireBase/firebase.utils'
 //import connect => higher-order component => take component as argument
 import {connect} from 'react-redux'; 
 import {ReactComponent as Logo} from '../../assets/4.3 crown.svg.svg';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component'
 
 
 // ================================= START CODING HERE=========================
 
-const Header = ({currentUser}) => (
+const Header = ({currentUser, hidden}) => {
+    
+    return (
+    
     <div className="header">
         <Link to="/" className="logo-container">
             <Logo className='logo'></Logo>
@@ -23,15 +28,24 @@ const Header = ({currentUser}) => (
             :
             <Link className="option" to='/signin'>SIGN IN</Link>
             }
+            <CartIcon/>
+            {
+                hidden ? null : <CartDropdown/>
+            }
+            
 
         </div>
     </div>
-)
+)}
 
 //first argemunet of connect() => connect redux
 // state -> link root-reducer.js => object
-const MapStateToProps = (state) => ({
-    currentuser: state.user.currentUser
-})
+const MapStateToProps = ({user:{currentUser},cart:{hidden}}) => {
+   console.log("currentUser: ",currentUser)
+   console.log("hidden: ", hidden)
+   return { currentUser:currentUser,
+    hidden:hidden }
+}
 
 export default connect(MapStateToProps)(Header);
+// export default Header;

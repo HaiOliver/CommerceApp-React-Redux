@@ -11,7 +11,7 @@ const MenuItem = ({title,imageUrl,size, history, linkUrl, match}) => (
         console.log("match url will ",match.url);
         history.push(`${match.url}${linkUrl}`)
     }}>
-                <div class="background-image" style={{backgroundImage:`url(${imageUrl})`}}>
+                <div className="background-image" style={{backgroundImage:`url(${imageUrl})`}}>
 
                 </div>
                 <div className="content">

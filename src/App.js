@@ -1,6 +1,6 @@
 import React from 'react';
 import HomePage from './pages/homepage/homepage.component'
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component.jsx';
 
@@ -34,20 +34,14 @@ class App extends React.Component {
                   id: snapShot.id,
                   ...snapShot.data()
                
-              }
-              
-              // in case setState havenot responded it back because of async function
-              // ,()=>{
-              //   console.log("current user check, line 43, App.js: ", this.state.currentUser)
-              // }
-              )
+              })
              
           })
    
       }else{
-        setCurrentUser({
+        setCurrentUser(
            userAuth
-        })
+        )
       } 
       
     })
@@ -67,7 +61,11 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={HomePage}/>
           <Route exact path="/shop" component={ShopPage}/>
-          <Route exact path="/signin" component={SignInAndSignUpPage}/>
+          <Route exact path="/signin" render={ ()=>
+            this.props.currentUser 
+              ? (<Redirect to="/"/>) 
+              : (<SignInAndSignUpPage/>)
+          }/>
         </Switch>
        
       </div>
@@ -76,8 +74,20 @@ class App extends React.Component {
   
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser : user => dispatch(setCurrentUser(user))
-})
+//first argument of connect() -> set currentUser
+const mapStateToProps = ({user}) =>
+  
+  {
+    console.log("App.js line 87, currentUser after mapStateToProps called: ",{currentUser: user.currentUser})
+    return  {currentUser: user.currentUser}
+}
 
-export default connect(null,mapDispatchToProps)(App);
+//second argument of connect() -> update current user
+const mapDispatchToProps = (dispatch) => {
+  console.log("App.js line 93, dispatch(setCurrentUser): ",{
+    setCurrentUser : user => dispatch(setCurrentUser(user))})
+  return {
+  setCurrentUser : user => dispatch(setCurrentUser(user))}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
