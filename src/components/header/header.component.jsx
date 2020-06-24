@@ -9,6 +9,14 @@ import {ReactComponent as Logo} from '../../assets/4.3 crown.svg.svg';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component'
 
+// reselect -> selectCurrentUser
+import {selectCurrentUser} from '../../redux/user/user.selectors'
+
+// reselect -> selectCartHidden
+import {selectCartHidden} from '../../redux/cart/cart.selectors'
+
+// make more nice 
+import {createStructuredSelector} from 'reselect';
 
 // ================================= START CODING HERE=========================
 
@@ -40,12 +48,11 @@ const Header = ({currentUser, hidden}) => {
 
 //first argemunet of connect() => connect redux
 // state -> link root-reducer.js => object
-const MapStateToProps = ({user:{currentUser},cart:{hidden}}) => {
-   console.log("currentUser: ",currentUser)
-   console.log("hidden: ", hidden)
-   return { currentUser:currentUser,
-    hidden:hidden }
-}
+const MapStateToProps = createStructuredSelector (
+   
+   { currentUser: selectCurrentUser,
+    hidden: selectCartHidden }
+)
 
 export default connect(MapStateToProps)(Header);
 // export default Header;

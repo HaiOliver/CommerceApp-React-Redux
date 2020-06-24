@@ -7,11 +7,19 @@ import Header from './components/header/header.component.jsx';
 import './App.css';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { auth, createUserProfileDocument} from './fireBase/firebase.utils';
-
+import CheckoutPage from './pages/check-out/check-out.component';
 // take setCurrentUse -> update currentUser state 
 import {setCurrentUser} from './redux/user/user.action';
 // need connect() from redux
 import {connect} from 'react-redux';
+
+//make more scaleable -> createstructuredSelector
+import {createStructuredSelector} from 'reselect';
+
+// reselect -> currentUser
+import {selectCurrentUser} from './redux/user/user.selectors';
+
+
 
 class App extends React.Component {
   
@@ -59,13 +67,18 @@ class App extends React.Component {
         {/* put header out switch => header display in all pages */}
         <Header />
         <Switch>
+          {/* Homepage */}
           <Route exact path="/" component={HomePage}/>
-          <Route exact path="/shop" component={ShopPage}/>
+          {/* Shop Page */}
+          <Route  path="/shop" component={ShopPage}/>
+          {/* Sign In page */}
           <Route exact path="/signin" render={ ()=>
             this.props.currentUser 
               ? (<Redirect to="/"/>) 
               : (<SignInAndSignUpPage/>)
           }/>
+          {/* Check Out */}
+          <Route exact path="/checkout" component={CheckoutPage}/>
         </Switch>
        
       </div>
@@ -75,12 +88,11 @@ class App extends React.Component {
 }
 
 //first argument of connect() -> set currentUser
-const mapStateToProps = ({user}) =>
+const mapStateToProps = createStructuredSelector
   
-  {
-    console.log("App.js line 87, currentUser after mapStateToProps called: ",{currentUser: user.currentUser})
-    return  {currentUser: user.currentUser}
-}
+  (
+   {currentUser: selectCurrentUser }
+  )
 
 //second argument of connect() -> update current user
 const mapDispatchToProps = (dispatch) => {
