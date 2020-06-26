@@ -1,23 +1,37 @@
 import React from 'react';
 import HomePage from './pages/homepage/homepage.component'
-import {Switch, Route, Redirect} from 'react-router-dom';
+
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component.jsx';
 
 import './App.css';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth, createUserProfileDocument} from './fireBase/firebase.utils';
+
 import CheckoutPage from './pages/check-out/check-out.component';
+
+//======================= import -> set up Firebase======================================
+import { auth, createUserProfileDocument} from './fireBase/firebase.utils';
+
+// =============================================need -> route=========================
+import {Switch, Route, Redirect} from 'react-router-dom';
+
+// =============================Redux import part -> scalable state =========================
 // take setCurrentUse -> update currentUser state 
 import {setCurrentUser} from './redux/user/user.action';
 // need connect() from redux
 import {connect} from 'react-redux';
+// ======================================================
 
+
+// ============================Reselect part -> performance -> load when needed=====================
 //make more scaleable -> createstructuredSelector
 import {createStructuredSelector} from 'reselect';
 
 // reselect -> currentUser
 import {selectCurrentUser} from './redux/user/user.selectors';
+// =============================================================
+
+
 
 
 
