@@ -20,6 +20,8 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`);
 
+
+
   // create snapshot
   const snapShot = await userRef.get();
 
@@ -49,16 +51,69 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 }
 
+// add data -> all items -> firebase
+
+export const addCollectionAndDocument = async (collectionKey, ObjToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+  // console.log("line 58, firebase.util.js, collectionRef: ", collectionRef)
+  // use batch -> wrap small requests into one big request -> firebase
+  const batch = firestore.batch()
+  ObjToAdd.forEach(obj => {
+    // allocate -> 5 spot -> unique key -> firebase 
+    const newDocRef = collectionRef.doc();
+    // console.log("line 63, firebase.util.js, collectionRef.doc(): ", newDocRef)
+    // put each obj into 5 spot -> already created in line 63
+    batch.set(newDocRef,obj)
+  })
+
+  return await batch.commit()
+
+}
+
+// convert sanpshop -> array data items
+export const convertCollectionsSnapshotToMap = (collections) =>  {
+  const transformCollection = collections.docs.map(doc =>{
+    // need data() -> grab data from firebase  
+    const {title, items} = doc.data();
+    return {
+      routeName:encodeURI(title.toLowerCase())
+      ,id:doc.id,
+      title,
+      items
+    }
+  })
+  // console.log("line 85, firebase.util: transformCollection:", transformCollection)
+  // convert array collections -> object collection
+  return transformCollection.reduce((accumulator, collection)=>{
+    // object[key] = value 
+     accumulator[collection.title.toLowerCase()] = collection
+     
+     return accumulator
+  },{})
+}
+
 
 //   export to use
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 //   provider.setCustomParameters({prompt: 'select-account'});
 
+// check user session exist or not
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+      const unSubcribe = auth.onAuthStateChanged(userAuth =>{
+        unSubcribe();
+        
+        resolve(userAuth);
+      },reject
+      )
+  })
+}
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 //   export whold library
 export default firebase;

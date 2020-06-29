@@ -1,3 +1,4 @@
+// important -> connect whold redux -> App.js
 import {combineReducers} from 'redux';
 
 
