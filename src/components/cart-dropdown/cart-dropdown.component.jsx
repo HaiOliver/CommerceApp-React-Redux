@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 // need selectCartItems -> get all items in cart
 import {selectCartItems} from '../../redux/cart/cart.selectors';
 
-//make more scaleable -> createstructuredSelector
+//make more scalable -> createStructuredSelector
 import {createStructuredSelector} from 'reselect';
         
 //
