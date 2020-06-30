@@ -16,9 +16,6 @@ import {connect} from 'react-redux';
 // transfrom from function -> class -> need componentdidMount
 // Goal: firebase -> fetch collections -> object: {{},{},{}} 
 
-
-
-
 const ShopPage = ({fetchCollectionsStart, match}) => {
     // become componentDidMount
     useEffect(()=>{
